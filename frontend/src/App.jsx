@@ -25,7 +25,7 @@ const Sidebar = () => {
   return (
     <aside className="sidebar glass-panel flex-col">
       <div className="logo-container flex items-center gap-2">
-        <AlertTriangle size={32} style={{color: 'var(--primary-color)'}} />
+        <img src="/logo.png" alt="Logo" style={{width: '36px', height: '36px', borderRadius: '8px'}} />
         <h1 className="font-bold text-xl text-gradient">Community Hero</h1>
       </div>
       

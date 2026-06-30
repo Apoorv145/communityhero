@@ -108,7 +108,7 @@ export default function Auth() {
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '40%', background: 'linear-gradient(to bottom, rgba(255,255,255,0.05), transparent)', pointerEvents: 'none' }}></div>
 
         <div className="flex-col items-center justify-center" style={{ textAlign: 'center', marginBottom: '2rem', position: 'relative', zIndex: 20 }}>
-          <AlertTriangle size={48} style={{ color: 'var(--primary-color)', filter: 'drop-shadow(0 0 15px rgba(6,182,212,0.5))', margin: '0 auto 1rem auto' }} />
+          <img src="/logo.png" alt="Community Hero Logo" style={{ width: '80px', height: '80px', margin: '0 auto 1rem auto', borderRadius: '16px', filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.1))' }} />
           <h2 className="font-bold text-white" style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Community Hero</h2>
           <p className="text-muted" style={{ fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase' }}>{isLogin ? 'Sign In to Access' : 'Create an Account'}</p>
         </div>
