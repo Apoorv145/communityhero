@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+pydantic
+# ultralytics # YOLOv11 library (commented out for local simulation without heavy install)
+# opencv-python
