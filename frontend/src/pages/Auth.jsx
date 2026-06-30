@@ -147,20 +147,20 @@ export default function Auth() {
           </div>
 
           <button disabled={loading} type="submit" className="btn-primary w-full" style={{ height: '50px', marginTop: '1rem', fontSize: '1rem' }}>
-            {loading ? 'Authenticating...' : isLogin ? 'Initialize Uplink' : 'Establish Clearance'}
+            {loading ? 'Authenticating...' : isLogin ? 'Log In' : 'Sign Up'}
             {!loading && <ArrowRight size={18} />}
           </button>
         </form>
 
         <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', position: 'relative', zIndex: 20 }}>
           <p className="text-muted" style={{ fontSize: '0.875rem' }}>
-            {isLogin ? "No clearance code? " : "Already established? "}
+            {isLogin ? "New user? " : "Already have an account? "}
             <button 
               type="button" 
               style={{ color: 'var(--primary-color)', fontWeight: 'bold', marginLeft: '0.25rem' }}
               onClick={() => setIsLogin(!isLogin)}
             >
-              {isLogin ? 'Request Access' : 'Sign In'}
+              {isLogin ? 'Sign Up' : 'Log In'}
             </button>
           </p>
         </div>
