@@ -191,7 +191,7 @@ export default function Dashboard() {
     <div className="dashboard animate-fade-in flex-col gap-6 max-w-7xl mx-auto">
       <header className="flex justify-between items-center mb-4 flex-wrap gap-4">
         <div>
-          <h2 className="text-3xl font-bold">Civic Command Center</h2>
+          <h2 className="text-3xl font-bold">Community Hero</h2>
           <p className="text-muted">Live Tracking, AI Twin & Ward Health</p>
         </div>
         <div className="flex gap-2 flex-wrap">
