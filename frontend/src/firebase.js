@@ -2,12 +2,13 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'mock_key',
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'mock.firebaseapp.com',
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'mock',
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'mock.appspot.com',
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || 'mock',
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || 'mock'
+  apiKey: "AIzaSyBtJa1BoOhDRCefHNK-uok0a9ZVF9JRDz0",
+  authDomain: "community-hero-people.firebaseapp.com",
+  projectId: "community-hero-people",
+  storageBucket: "community-hero-people.firebasestorage.app",
+  messagingSenderId: "300655231122",
+  appId: "1:300655231122:web:3713efcebe851b94d4e64b",
+  measurementId: "G-XJQYD5S0XW"
 };
 
 let app;
