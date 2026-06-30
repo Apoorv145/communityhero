@@ -109,8 +109,8 @@ export default function Auth() {
 
         <div className="flex-col items-center justify-center" style={{ textAlign: 'center', marginBottom: '2rem', position: 'relative', zIndex: 20 }}>
           <AlertTriangle size={48} style={{ color: 'var(--primary-color)', filter: 'drop-shadow(0 0 15px rgba(6,182,212,0.5))', margin: '0 auto 1rem auto' }} />
-          <h2 className="font-bold text-white" style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>{isLogin ? 'Access Portal' : 'Join Network'}</h2>
-          <p className="text-muted" style={{ fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Community Hero</p>
+          <h2 className="font-bold text-white" style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Community Hero</h2>
+          <p className="text-muted" style={{ fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase' }}>{isLogin ? 'Sign In to Access' : 'Create an Account'}</p>
         </div>
 
         {error && (
