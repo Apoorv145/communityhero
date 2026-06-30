@@ -26,7 +26,7 @@ const Sidebar = () => {
     <aside className="sidebar glass-panel flex-col">
       <div className="logo-container flex items-center gap-2">
         <AlertTriangle size={32} style={{color: 'var(--primary-color)'}} />
-        <h1 className="font-bold text-xl text-gradient">Hero</h1>
+        <h1 className="font-bold text-xl text-gradient">Community Hero</h1>
       </div>
       
       <nav className="nav-menu flex-col gap-2" style={{marginTop: '2rem'}}>
