@@ -1,12 +1,8 @@
 {
-  "name": "community-hero",
+  "name": "community-hero-root",
   "private": true,
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
   "scripts": {
-    "build": "npm run build --workspace=frontend",
-    "postinstall": "npm run postinstall --workspace=backend"
+    "install": "cd frontend && npm install",
+    "build": "cd frontend && npm run build"
   }
 }
