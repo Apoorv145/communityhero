@@ -140,7 +140,8 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const response = await fetch('/api/issues');
+        const API_URL = import.meta.env.VITE_API_URL || '';
+        const response = await fetch(`${API_URL}/api/issues`);
         if (!response.ok) throw new Error('Failed to fetch issues');
         const data = await response.json();
         setIssues(data);

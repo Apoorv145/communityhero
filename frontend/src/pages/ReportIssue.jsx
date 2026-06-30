@@ -167,7 +167,8 @@ export default function ReportIssue() {
         ? `[Area: ${formData.area}] ${formData.description}`
         : formData.description;
 
-      const response = await fetch('/api/issues', {
+      const API_URL = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${API_URL}/api/issues`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, description: descriptionWithArea, imageBase64: fileBase64 })
