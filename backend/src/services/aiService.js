@@ -43,9 +43,25 @@ const fetchPoiContext = async (lat, lng) => {
 export const analyzeIssue = async (base64Image, textDescription, lat, lng) => {
   console.log('Orchestrating AI Pipeline...');
   
-  // 1. Run YOLOv11 Computer Vision detection
-  const yoloResult = await fetchYoloDetection(base64Image, lat, lng);
-  const detectedIssue = yoloResult.detections[0].class;
+  // 1. Run YOLOv11 Computer Vision detection OR NLP Intent Extraction
+  let detectedIssue = 'garbage'; // fallback
+  let confidenceScore = 0.85;
+
+  if (base64Image) {
+    const yoloResult = await fetchYoloDetection(base64Image, lat, lng);
+    detectedIssue = yoloResult.detections[0].class;
+    confidenceScore = yoloResult.detections[0].confidence;
+  } else if (textDescription) {
+    // Simulated NLP / LLM extraction for Voice commands (Hindi/English)
+    const txt = textDescription.toLowerCase();
+    if (txt.includes('pothole') || txt.includes('gaddha') || txt.includes('road')) detectedIssue = 'pothole';
+    else if (txt.includes('water') || txt.includes('pani') || txt.includes('leak') || txt.includes('pipe')) detectedIssue = 'water leakage';
+    else if (txt.includes('tree') || txt.includes('ped') || txt.includes('gir') || txt.includes('fall')) detectedIssue = 'fallen tree';
+    else if (txt.includes('park') || txt.includes('car') || txt.includes('gadi') || txt.includes('vehicle')) detectedIssue = 'illegal parking';
+    else if (txt.includes('light') || txt.includes('batti') || txt.includes('andhera') || txt.includes('dark')) detectedIssue = 'broken streetlight';
+    else if (txt.includes('garbage') || txt.includes('kachra') || txt.includes('kuda') || txt.includes('waste')) detectedIssue = 'garbage';
+    confidenceScore = 0.95; // High confidence for NLP
+  }
   
   // 2. Fetch Geospatial Context (POIs)
   const poiContext = await fetchPoiContext(lat, lng);
@@ -115,7 +131,7 @@ export const analyzeIssue = async (base64Image, textDescription, lat, lng) => {
     preventiveMaintenance,
     poiContext,
     isDuplicate: false,
-    confidenceScore: yoloResult.detections[0].confidence,
-    aiAnalysisNotes: `YOLOv11 detected ${detectedIssue}. LLM assigned ${priorityLevel} priority (Score: ${priorityScore}) and routed to ${department} due to nearby POIs.`
+    confidenceScore: confidenceScore,
+    aiAnalysisNotes: base64Image ? `YOLOv11 detected ${detectedIssue}. LLM assigned ${priorityLevel} priority (Score: ${priorityScore}) and routed to ${department} due to nearby POIs.` : `Voice AI categorized issue as ${detectedIssue}. Assigned ${priorityLevel} priority (Score: ${priorityScore}) and routed to ${department}.`
   };
 };

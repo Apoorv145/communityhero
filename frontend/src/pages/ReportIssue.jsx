@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, MapPin, Sparkles, Check, Building, Wrench, Navigation } from 'lucide-react';
+import { Upload, MapPin, Sparkles, Check, Building, Wrench, Navigation, Mic, Languages } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -40,6 +40,10 @@ export default function ReportIssue() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fileBase64, setFileBase64] = useState(null);
   
+  // Voice state
+  const [isRecording, setIsRecording] = useState(false);
+  const [speechLang, setSpeechLang] = useState('hi-IN'); // Default to Hindi
+  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -49,6 +53,52 @@ export default function ReportIssue() {
   });
   const [aiResult, setAiResult] = useState(null);
   const navigate = useNavigate();
+
+  const startVoiceRecording = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice reporting is not supported in this browser. Please try Chrome.");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = speechLang;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setFormData(prev => ({
+        ...prev,
+        title: 'Voice Reported Issue',
+        description: transcript
+      }));
+      setFileBase64(null); // Clear any previous image
+      setIsRecording(false);
+      
+      // Auto-jump to step 2 so user can confirm and locate
+      setIsAnalyzing(true);
+      setTimeout(() => {
+        setIsAnalyzing(false);
+        setStep(2);
+      }, 1000);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech error:", event.error);
+      setIsRecording(false);
+      alert("Microphone error. Please try again.");
+    };
+
+    recognition.onend = () => {
+      setIsRecording(false);
+    };
+
+    recognition.start();
+  };
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -113,7 +163,6 @@ export default function ReportIssue() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      // Create explicit address from selected area
       const descriptionWithArea = formData.area !== 'Select Area' 
         ? `[Area: ${formData.area}] ${formData.description}`
         : formData.description;
@@ -148,25 +197,67 @@ export default function ReportIssue() {
 
       <div className="glass-panel p-8">
         {step === 1 && (
-          <div className="upload-section flex-col items-center justify-center text-center py-12">
-            <div className="upload-box p-8 rounded-xl w-full max-w-md" style={{border: '2px dashed var(--glass-border)', background: 'rgba(255,255,255,0.02)'}}>
-              {isAnalyzing ? (
+          <div className="upload-section grid grid-cols-1 md:grid-cols-2 gap-6 text-center py-8">
+            
+            {/* Visual AI Card */}
+            <div className="upload-box p-8 rounded-xl w-full flex-col justify-center items-center" style={{border: '2px dashed var(--glass-border)', background: 'rgba(255,255,255,0.02)'}}>
+              {isAnalyzing && fileBase64 ? (
                 <div className="flex-col items-center gap-4">
                   <Sparkles size={48} className="text-primary-color animate-pulse" />
-                  <h3 className="text-xl font-semibold">YOLOv11 is scanning your image...</h3>
-                  <p className="text-muted text-sm">Detecting potholes, garbage, and infrastructure issues</p>
+                  <h3 className="text-xl font-semibold">YOLOv11 is scanning image...</h3>
                 </div>
               ) : (
                 <div className="flex-col items-center gap-4">
                   <Upload size={48} className="text-muted mb-2" />
-                  <h3 className="text-xl font-semibold">Upload Photo or Video</h3>
-                  <p className="text-muted text-sm mb-4">Take a clear picture of the problem</p>
-                  <label className="btn-primary cursor-pointer">
-                    Choose File
+                  <h3 className="text-xl font-semibold">Photo/Video</h3>
+                  <p className="text-muted text-sm mb-4">Capture visual proof</p>
+                  <label className="btn-primary cursor-pointer w-full justify-center">
+                    Upload Visual
                     <input type="file" className="hidden" accept="image/*,video/*" onChange={handleImageUpload} style={{display: 'none'}} />
                   </label>
                 </div>
               )}
+            </div>
+
+            {/* Voice AI Card (Elderly Accessible) */}
+            <div className="upload-box p-8 rounded-xl w-full flex-col justify-center items-center" style={{border: '2px dashed var(--glass-border)', background: isRecording ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255,255,255,0.02)'}}>
+              {isAnalyzing && !fileBase64 ? (
+                <div className="flex-col items-center gap-4">
+                  <Sparkles size={48} className="text-secondary-color animate-pulse" />
+                  <h3 className="text-xl font-semibold">NLP Processing...</h3>
+                </div>
+              ) : (
+                <div className="flex-col items-center gap-4 w-full">
+                  <Mic size={48} className={isRecording ? 'text-red-500 animate-pulse' : 'text-muted mb-2'} />
+                  <h3 className="text-xl font-semibold">Voice Report</h3>
+                  <p className="text-muted text-sm mb-4">Speak your complaint</p>
+                  
+                  <div className="flex gap-2 w-full">
+                    <select 
+                      className="bg-white/10 border border-white/20 rounded p-2 text-sm text-white" 
+                      value={speechLang}
+                      onChange={(e) => setSpeechLang(e.target.value)}
+                    >
+                      <option value="hi-IN">Hindi / हिंदी</option>
+                      <option value="en-IN">English (India)</option>
+                      <option value="bn-IN">Bengali / বাংলা</option>
+                      <option value="ta-IN">Tamil / தமிழ்</option>
+                    </select>
+                    
+                    <button 
+                      className="btn-secondary flex-1 justify-center relative overflow-hidden" 
+                      onClick={startVoiceRecording}
+                      style={{ borderColor: isRecording ? '#ef4444' : '', color: isRecording ? '#ef4444' : '' }}
+                    >
+                      {isRecording ? 'Listening...' : 'Tap to Speak'}
+                      {isRecording && <div className="absolute inset-0 bg-red-500/20 animate-pulse rounded"></div>}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="col-span-1 md:col-span-2 mt-4 p-4 bg-white/5 rounded text-sm text-muted text-left border border-white/10">
+               <strong>Tip for Elderly Users:</strong> Simply tap the microphone and speak naturally (e.g. "Batti kharab hai" or "Pothole on the road"). The AI will automatically detect the issue type!
             </div>
           </div>
         )}

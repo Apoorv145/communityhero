@@ -21,6 +21,11 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Civic Management API is running' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Vercel Serverless Functions don't need app.listen
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+export default app;
